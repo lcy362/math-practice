@@ -25,19 +25,18 @@
 import { ref } from 'vue';
 
 // 响应式数据
-const minValue = ref(0);
-const maxValue = ref(20);
+const minValue = ref(1);
+const maxValue = ref(10);
 const selectedOperators = ref(['+', '-']);
 const operatorOptions = ref([
   { value: '+', label: '加法' },
   { value: '-', label: '减法' },
   { value: '*', label: '乘法' },
-  { value: '/', label: '除法' }
+  { value: '÷', label: '除法' }
 ]);
 
 // 运算符选择变更
 const handleOperatorChange = (e) => {
-  console.log("222" + e.detail.value)
   selectedOperators.value = e.detail.value;
 };
 

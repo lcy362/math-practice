@@ -31,6 +31,13 @@ if (uni.restoreGlobal) {
 }
 (function(vue) {
   "use strict";
+  function formatAppLog(type, filename, ...args) {
+    if (uni.__log__) {
+      uni.__log__(type, filename, ...args);
+    } else {
+      console[type].apply(console, [...args, filename]);
+    }
+  }
   const _export_sfc = (sfc, props) => {
     const target = sfc.__vccOpts || sfc;
     for (const [key, val] of props) {
@@ -39,137 +46,250 @@ if (uni.restoreGlobal) {
     return target;
   };
   const _sfc_main$2 = {
-    name: "uniLink",
-    props: {
-      href: {
-        type: String,
-        default: ""
-      },
-      text: {
-        type: String,
-        default: ""
-      },
-      download: {
-        type: String,
-        default: ""
-      },
-      showUnderLine: {
-        type: [Boolean, String],
-        default: true
-      },
-      copyTips: {
-        type: String,
-        default: "已自动复制网址，请在手机浏览器里粘贴该网址"
-      },
-      color: {
-        type: String,
-        default: "#999999"
-      },
-      fontSize: {
-        type: [Number, String],
-        default: 14
-      }
-    },
-    computed: {
-      isShowA() {
-        if ((this.isMail() || this.isTel()) && this._isH5 === true) {
-          return true;
+    __name: "index",
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const minValue = vue.ref(0);
+      const maxValue = vue.ref(20);
+      const selectedOperators = vue.ref(["+", "-"]);
+      const operatorOptions = vue.ref([
+        { value: "+", label: "加法" },
+        { value: "-", label: "减法" },
+        { value: "*", label: "乘法" },
+        { value: "/", label: "除法" }
+      ]);
+      const handleOperatorChange = (e) => {
+        formatAppLog("log", "at pages/index/index.vue:40", "222" + e.detail.value);
+        selectedOperators.value = e.detail.value;
+      };
+      function startPractice() {
+        if (minValue.value >= maxValue.value) {
+          uni.showToast({ title: "最大值必须大于最小值", icon: "none" });
+          return;
         }
-        return false;
-      }
-    },
-    created() {
-      this._isH5 = null;
-    },
-    methods: {
-      isMail() {
-        return this.href.startsWith("mailto:");
-      },
-      isTel() {
-        return this.href.startsWith("tel:");
-      },
-      openURL() {
-        if (this.isTel()) {
-          this.makePhoneCall(this.href.replace("tel:", ""));
-        } else {
-          plus.runtime.openURL(this.href);
+        if (selectedOperators.value.length === 0) {
+          uni.showToast({ title: "请至少选择一个运算符", icon: "none" });
+          return;
         }
-      },
-      makePhoneCall(phoneNumber) {
-        uni.makePhoneCall({
-          phoneNumber
+        const operators = encodeURIComponent(selectedOperators.value.join(","));
+        uni.navigateTo({
+          url: `/pages/problem/problem?min=${minValue.value}&max=${maxValue.value}&operators=${operators}`
         });
       }
+      const __returned__ = { minValue, maxValue, selectedOperators, operatorOptions, handleOperatorChange, startPractice, ref: vue.ref };
+      Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
+      return __returned__;
     }
   };
   function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
-    return $options.isShowA ? (vue.openBlock(), vue.createElementBlock("a", {
-      key: 0,
-      class: vue.normalizeClass(["uni-link", { "uni-link--withline": $props.showUnderLine === true || $props.showUnderLine === "true" }]),
-      href: $props.href,
-      style: vue.normalizeStyle({ color: $props.color, fontSize: $props.fontSize + "px" }),
-      download: $props.download
-    }, [
-      vue.renderSlot(_ctx.$slots, "default", {}, () => [
-        vue.createTextVNode(
-          vue.toDisplayString($props.text),
-          1
-          /* TEXT */
-        )
-      ], true)
-    ], 14, ["href", "download"])) : (vue.openBlock(), vue.createElementBlock(
-      "text",
-      {
-        key: 1,
-        class: vue.normalizeClass(["uni-link", { "uni-link--withline": $props.showUnderLine === true || $props.showUnderLine === "true" }]),
-        style: vue.normalizeStyle({ color: $props.color, fontSize: $props.fontSize + "px" }),
-        onClick: _cache[0] || (_cache[0] = (...args) => $options.openURL && $options.openURL(...args))
-      },
-      [
-        vue.renderSlot(_ctx.$slots, "default", {}, () => [
-          vue.createTextVNode(
-            vue.toDisplayString($props.text),
-            1
-            /* TEXT */
-          )
-        ], true)
-      ],
-      6
-      /* CLASS, STYLE */
-    ));
-  }
-  const __easycom_0 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__scopeId", "data-v-5db80ddb"], ["__file", "/Users/lcy/Documents/HBuilderProjects/uni-demo/uni_modules/uni-link/components/uni-link/uni-link.vue"]]);
-  function formatAppLog(type, filename, ...args) {
-    if (uni.__log__) {
-      uni.__log__(type, filename, ...args);
-    } else {
-      console[type].apply(console, [...args, filename]);
-    }
-  }
-  function resolveEasycom(component, easycom) {
-    return typeof component === "string" ? easycom : component;
-  }
-  const _sfc_main$1 = {
-    data() {
-      return {
-        href: "https://uniapp.dcloud.io/component/README?id=uniui"
-      };
-    },
-    methods: {}
-  };
-  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_uni_link = resolveEasycom(vue.resolveDynamicComponent("uni-link"), __easycom_0);
     return vue.openBlock(), vue.createElementBlock("view", { class: "container" }, [
-      vue.createElementVNode("view", { class: "intro" }, "111本项目已包含uni ui组件，无需import和注册，可直接使用。在代码区键入字母u，即可通过代码助手列出所有可用组件。光标置于组件名称处按F1，即可查看组件文档。"),
-      vue.createElementVNode("text", { class: "intro" }, "详见："),
-      vue.createVNode(_component_uni_link, {
-        href: $data.href,
-        text: $data.href
-      }, null, 8, ["href", "text"])
+      vue.createElementVNode("view", { class: "range-selector" }, [
+        vue.createElementVNode("text", null, "数字范围："),
+        vue.withDirectives(vue.createElementVNode(
+          "input",
+          {
+            type: "number",
+            "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $setup.minValue = $event),
+            placeholder: "最小值"
+          },
+          null,
+          512
+          /* NEED_PATCH */
+        ), [
+          [
+            vue.vModelText,
+            $setup.minValue,
+            void 0,
+            { number: true }
+          ]
+        ]),
+        vue.createElementVNode("text", null, "至"),
+        vue.withDirectives(vue.createElementVNode(
+          "input",
+          {
+            type: "number",
+            "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $setup.maxValue = $event),
+            placeholder: "最大值"
+          },
+          null,
+          512
+          /* NEED_PATCH */
+        ), [
+          [
+            vue.vModelText,
+            $setup.maxValue,
+            void 0,
+            { number: true }
+          ]
+        ])
+      ]),
+      vue.createElementVNode("view", { class: "operator-selector" }, [
+        vue.createElementVNode("text", null, "选择运算符："),
+        vue.createElementVNode(
+          "checkbox-group",
+          { onChange: $setup.handleOperatorChange },
+          [
+            (vue.openBlock(true), vue.createElementBlock(
+              vue.Fragment,
+              null,
+              vue.renderList($setup.operatorOptions, (op) => {
+                return vue.openBlock(), vue.createElementBlock("label", {
+                  key: op.value
+                }, [
+                  vue.createElementVNode("checkbox", {
+                    value: op.value,
+                    checked: $setup.selectedOperators.includes(op.value)
+                  }, null, 8, ["value", "checked"]),
+                  vue.createTextVNode(
+                    " " + vue.toDisplayString(op.label),
+                    1
+                    /* TEXT */
+                  )
+                ]);
+              }),
+              128
+              /* KEYED_FRAGMENT */
+            ))
+          ],
+          32
+          /* NEED_HYDRATION */
+        )
+      ]),
+      vue.createElementVNode("button", {
+        class: "confirm-btn",
+        onClick: $setup.startPractice
+      }, "开始练习")
     ]);
   }
-  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__file", "/Users/lcy/Documents/HBuilderProjects/uni-demo/pages/index/index.vue"]]);
+  const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["render", _sfc_render$1], ["__file", "/Users/lcy/Documents/HBuilderProjects/math-practice/pages/index/index.vue"]]);
+  const _sfc_main$1 = {
+    __name: "problem",
+    setup(__props, { expose: __expose }) {
+      __expose();
+      const queryParams = vue.ref({});
+      const num1 = vue.ref(0);
+      const num2 = vue.ref(0);
+      const currentOperator = vue.ref("+");
+      const userAnswer = vue.ref("");
+      const isCorrect = vue.ref(false);
+      const showFeedback = vue.ref(false);
+      const feedbackMessage = vue.ref("");
+      vue.onMounted(() => {
+        const pages = getCurrentPages();
+        if (pages.length) {
+          queryParams.value = pages[pages.length - 1].options || {};
+          generateProblem();
+        }
+      });
+      const generateProblem = () => {
+        const min = parseInt(queryParams.value.min) || 0;
+        const max = parseInt(queryParams.value.max) || 20;
+        const operators = (queryParams.value.operators || "+,-").split(",").filter((item) => item.trim() != "");
+        formatAppLog("log", "at pages/problem/problem.vue:50", "opt:" + operators);
+        currentOperator.value = operators[Math.floor(Math.random() * operators.length)];
+        num1.value = Math.floor(Math.random() * (max - min + 1)) + min;
+        if (currentOperator.value === "-") {
+          num2.value = Math.floor(Math.random() * (num1.value - min + 1)) + min;
+        } else if (currentOperator.value === "/") {
+          do {
+            num2.value = Math.floor(Math.random() * (max - min + 1)) + 1;
+          } while (num1.value % num2.value !== 0);
+        } else {
+          num2.value = Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+      };
+      const checkAnswer = () => {
+        if (userAnswer.value === null || userAnswer.value === "")
+          return;
+        let correctAnswer;
+        switch (currentOperator.value) {
+          case "+":
+            correctAnswer = num1.value + num2.value;
+            break;
+          case "-":
+            correctAnswer = num1.value - num2.value;
+            break;
+          case "*":
+            correctAnswer = num1.value * num2.value;
+            break;
+          case "/":
+            correctAnswer = num1.value / num2.value;
+            break;
+        }
+        formatAppLog("log", "at pages/problem/problem.vue:83", "correctAnswer:" + correctAnswer);
+        isCorrect.value = parseFloat(userAnswer.value) === correctAnswer;
+        showFeedback.value = true;
+        if (isCorrect.value) {
+          feedbackMessage.value = "回答正确！";
+          setTimeout(() => {
+            showFeedback.value = false;
+            userAnswer.value = "";
+            generateProblem();
+          }, 1e3);
+        } else {
+          feedbackMessage.value = `回答错误，正确答案是：${correctAnswer}`;
+        }
+      };
+      const goBack = () => {
+        uni.navigateBack();
+      };
+      const __returned__ = { queryParams, num1, num2, currentOperator, userAnswer, isCorrect, showFeedback, feedbackMessage, generateProblem, checkAnswer, goBack, ref: vue.ref, onMounted: vue.onMounted };
+      Object.defineProperty(__returned__, "__isScriptSetup", { enumerable: false, value: true });
+      return __returned__;
+    }
+  };
+  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "container" }, [
+      vue.createElementVNode(
+        "view",
+        { class: "problem" },
+        vue.toDisplayString($setup.num1) + " " + vue.toDisplayString($setup.currentOperator) + " " + vue.toDisplayString($setup.num2) + " = ? ",
+        1
+        /* TEXT */
+      ),
+      vue.withDirectives(vue.createElementVNode(
+        "input",
+        {
+          type: "number",
+          "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $setup.userAnswer = $event),
+          placeholder: "输入答案",
+          onConfirm: $setup.checkAnswer,
+          focus: ""
+        },
+        null,
+        544
+        /* NEED_HYDRATION, NEED_PATCH */
+      ), [
+        [
+          vue.vModelText,
+          $setup.userAnswer,
+          void 0,
+          { number: true }
+        ]
+      ]),
+      vue.createElementVNode("button", {
+        class: "submit-btn",
+        onClick: $setup.checkAnswer
+      }, "提交"),
+      vue.createElementVNode("button", {
+        class: "back-btn",
+        onClick: $setup.goBack
+      }, "返回主页"),
+      $setup.showFeedback ? (vue.openBlock(), vue.createElementBlock(
+        "view",
+        {
+          key: 0,
+          class: vue.normalizeClass(["feedback", $setup.isCorrect ? "correct" : "wrong"])
+        },
+        vue.toDisplayString($setup.feedbackMessage),
+        3
+        /* TEXT, CLASS */
+      )) : vue.createCommentVNode("v-if", true)
+    ]);
+  }
+  const PagesProblemProblem = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__file", "/Users/lcy/Documents/HBuilderProjects/math-practice/pages/problem/problem.vue"]]);
   __definePage("pages/index/index", PagesIndexIndex);
+  __definePage("pages/problem/problem", PagesProblemProblem);
   const _sfc_main = {
     onLaunch: function() {
       formatAppLog("warn", "at App.vue:4", "当前组件仅支持 uni_modules 目录结构 ，请升级 HBuilderX 到 3.1.0 版本以上！");
@@ -182,7 +302,7 @@ if (uni.restoreGlobal) {
       formatAppLog("log", "at App.vue:11", "App Hide");
     }
   };
-  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "/Users/lcy/Documents/HBuilderProjects/uni-demo/App.vue"]]);
+  const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "/Users/lcy/Documents/HBuilderProjects/math-practice/App.vue"]]);
   function createApp() {
     const app = vue.createVueApp(App);
     return {

@@ -75,11 +75,12 @@ const checkAnswer = () => {
   
   let correctAnswer;
   switch (currentOperator.value) {
-    case 'add': correctAnswer = num1.value + num2.value; break;
+    case '+': correctAnswer = num1.value + num2.value; break;
     case '-': correctAnswer = num1.value - num2.value; break;
     case '*': correctAnswer = num1.value * num2.value; break;
-    case '/': correctAnswer = num1.value / num2.value; break;
+    case '÷': correctAnswer = num1.value / num2.value; break;
   }
+  console.log("correctAnswer:" + correctAnswer)
   
   isCorrect.value = parseFloat(userAnswer.value) === correctAnswer;
   showFeedback.value = true;
@@ -150,6 +151,6 @@ input {
 
 .wrong {
   background-color: #f2dede;
-  color: #f2dede;
+  color: #a94442;
 }
 </style>
