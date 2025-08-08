@@ -31,13 +31,6 @@ if (uni.restoreGlobal) {
 }
 (function(vue) {
   "use strict";
-  function formatAppLog(type, filename, ...args) {
-    if (uni.__log__) {
-      uni.__log__(type, filename, ...args);
-    } else {
-      console[type].apply(console, [...args, filename]);
-    }
-  }
   const _export_sfc = (sfc, props) => {
     const target = sfc.__vccOpts || sfc;
     for (const [key, val] of props) {
@@ -49,17 +42,16 @@ if (uni.restoreGlobal) {
     __name: "index",
     setup(__props, { expose: __expose }) {
       __expose();
-      const minValue = vue.ref(0);
-      const maxValue = vue.ref(20);
+      const minValue = vue.ref(1);
+      const maxValue = vue.ref(10);
       const selectedOperators = vue.ref(["+", "-"]);
       const operatorOptions = vue.ref([
         { value: "+", label: "加法" },
         { value: "-", label: "减法" },
-        { value: "*", label: "乘法" },
-        { value: "/", label: "除法" }
+        { value: "×", label: "乘法" },
+        { value: "÷", label: "除法" }
       ]);
       const handleOperatorChange = (e) => {
-        formatAppLog("log", "at pages/index/index.vue:40", "222" + e.detail.value);
         selectedOperators.value = e.detail.value;
       };
       function startPractice() {
@@ -182,15 +174,16 @@ if (uni.restoreGlobal) {
         }
       });
       const generateProblem = () => {
+        const decoded = decodeURIComponent(options.params || "");
+        queryParams.value = JSON.parse(decoded);
         const min = parseInt(queryParams.value.min) || 0;
         const max = parseInt(queryParams.value.max) || 20;
-        const operators = (queryParams.value.operators || "+,-").split(",").filter((item) => item.trim() != "");
-        formatAppLog("log", "at pages/problem/problem.vue:50", "opt:" + operators);
+        const operators = queryParams.value.operators.value;
         currentOperator.value = operators[Math.floor(Math.random() * operators.length)];
         num1.value = Math.floor(Math.random() * (max - min + 1)) + min;
         if (currentOperator.value === "-") {
           num2.value = Math.floor(Math.random() * (num1.value - min + 1)) + min;
-        } else if (currentOperator.value === "/") {
+        } else if (currentOperator.value === "÷") {
           do {
             num2.value = Math.floor(Math.random() * (max - min + 1)) + 1;
           } while (num1.value % num2.value !== 0);
@@ -209,14 +202,13 @@ if (uni.restoreGlobal) {
           case "-":
             correctAnswer = num1.value - num2.value;
             break;
-          case "*":
+          case "×":
             correctAnswer = num1.value * num2.value;
             break;
-          case "/":
+          case "÷":
             correctAnswer = num1.value / num2.value;
             break;
         }
-        formatAppLog("log", "at pages/problem/problem.vue:83", "correctAnswer:" + correctAnswer);
         isCorrect.value = parseFloat(userAnswer.value) === correctAnswer;
         showFeedback.value = true;
         if (isCorrect.value) {
@@ -290,6 +282,13 @@ if (uni.restoreGlobal) {
   const PagesProblemProblem = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__file", "/Users/lcy/Documents/HBuilderProjects/math-practice/pages/problem/problem.vue"]]);
   __definePage("pages/index/index", PagesIndexIndex);
   __definePage("pages/problem/problem", PagesProblemProblem);
+  function formatAppLog(type, filename, ...args) {
+    if (uni.__log__) {
+      uni.__log__(type, filename, ...args);
+    } else {
+      console[type].apply(console, [...args, filename]);
+    }
+  }
   const _sfc_main = {
     onLaunch: function() {
       formatAppLog("warn", "at App.vue:4", "当前组件仅支持 uni_modules 目录结构 ，请升级 HBuilderX 到 3.1.0 版本以上！");

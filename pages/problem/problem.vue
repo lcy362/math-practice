@@ -44,10 +44,13 @@ onMounted(() => {
 
 // 生成题目
 const generateProblem = () => {
+  const decoded = decodeURIComponent(options.params || '');
+      // 2. 解析 JSON 字符串 → 对象
+  queryParams.value = JSON.parse(decoded);
   const min = parseInt(queryParams.value.min) || 0;
   const max = parseInt(queryParams.value.max) || 20;
-  const operators = (queryParams.value.operators || '+,-').split(',').filter((item) => item.trim() != "");
-  console.log("opt:" + operators)
+  const operators = queryParams.value.operators.value;
+  // const operators = (opt || '+,-').split(',').filter((item) => item.trim() != "");
   
   // 随机选择运算符
   currentOperator.value = operators[Math.floor(Math.random() * operators.length)];
@@ -59,7 +62,7 @@ const generateProblem = () => {
   if (currentOperator.value === '-') {
     // 减法确保结果非负
     num2.value = Math.floor(Math.random() * (num1.value - min + 1)) + min;
-  } else if (currentOperator.value === '/') {
+  } else if (currentOperator.value === '÷') {
     // 除法确保整数结果
     do {
       num2.value = Math.floor(Math.random() * (max - min + 1)) + 1;
@@ -77,10 +80,9 @@ const checkAnswer = () => {
   switch (currentOperator.value) {
     case '+': correctAnswer = num1.value + num2.value; break;
     case '-': correctAnswer = num1.value - num2.value; break;
-    case '*': correctAnswer = num1.value * num2.value; break;
+    case '×': correctAnswer = num1.value * num2.value; break;
     case '÷': correctAnswer = num1.value / num2.value; break;
   }
-  console.log("correctAnswer:" + correctAnswer)
   
   isCorrect.value = parseFloat(userAnswer.value) === correctAnswer;
   showFeedback.value = true;
