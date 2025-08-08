@@ -1,0 +1,29 @@
+
+.container {
+  padding: 20px;
+}
+.range-selector {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.range-selector input {
+  border: 1px solid #ddd;
+  padding: 8px;
+  margin: 0 10px;
+  width: 100px;
+  text-align: center;
+}
+.operator-selector {
+  margin-bottom: 30px;
+}
+.operator-selector label {
+  display: block;
+  margin: 10px 0;
+}
+.confirm-btn {
+  background-color: #4a90e2;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+}

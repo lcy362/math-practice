@@ -35,19 +35,19 @@ const showFeedback = ref(false);
 const feedbackMessage = ref('');
 
 onMounted(() => {
-  const pages = getCurrentPages();
-  if (pages.length) {
-    queryParams.value = pages[pages.length - 1].options || {};
-    generateProblem();
+  const params = uni.getStorageSync('PRACTICE_PARAMS');
+  if (!params) {
+    uni.showToast({ title: '参数加载失败', icon: 'error' });
+    setTimeout(() => uni.navigateBack(), 1500);
+    return;
   }
+  generateProblem(params); // 初始化题目
 });
 
+
 // 生成题目
-const generateProblem = () => {
-  const min = parseInt(queryParams.value.min) || 0;
-  const max = parseInt(queryParams.value.max) || 20;
-  const opt = decodeURIComponent(queryParams.value.operators);
-  const operators = (opt || '+,-').split(',').filter((item) => item.trim() != "");
+const generateProblem = (params) => {
+  const { min, max, operators } = params;
   
   // 随机选择运算符
   currentOperator.value = operators[Math.floor(Math.random() * operators.length)];
@@ -89,7 +89,7 @@ const checkAnswer = () => {
     setTimeout(() => {
       showFeedback.value = false;
       userAnswer.value = '';
-      generateProblem();
+      generateProblem(uni.getStorageSync('PRACTICE_PARAMS'));
     }, 1000);
   } else {
     feedbackMessage.value = `回答错误，正确答案是：${correctAnswer}`;

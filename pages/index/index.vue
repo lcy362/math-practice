@@ -51,10 +51,17 @@ function startPractice() {
     uni.showToast({ title: '请至少选择一个运算符', icon: 'none' });
     return;
   }
-  const operators = encodeURIComponent(selectedOperators.value.join(','));
-  uni.navigateTo({
-    url: `/pages/problem/problem?min=${minValue.value}&max=${maxValue.value}&operators=${operators}`
+  // 存储到全局（无需key）
+  uni.setStorageSync('PRACTICE_PARAMS', {
+    min: minValue.value,
+    max: maxValue.value,
+    operators: selectedOperators.value
   });
+
+  // 跳转答题页
+  uni.navigateTo({ url: '/pages/problem/problem' });
+
+
 };
 </script>
 

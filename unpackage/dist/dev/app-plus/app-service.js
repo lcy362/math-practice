@@ -48,7 +48,7 @@ if (uni.restoreGlobal) {
       const operatorOptions = vue.ref([
         { value: "+", label: "加法" },
         { value: "-", label: "减法" },
-        { value: "×", label: "乘法" },
+        { value: "*", label: "乘法" },
         { value: "÷", label: "除法" }
       ]);
       const handleOperatorChange = (e) => {
@@ -174,11 +174,10 @@ if (uni.restoreGlobal) {
         }
       });
       const generateProblem = () => {
-        const decoded = decodeURIComponent(options.params || "");
-        queryParams.value = JSON.parse(decoded);
         const min = parseInt(queryParams.value.min) || 0;
         const max = parseInt(queryParams.value.max) || 20;
-        const operators = queryParams.value.operators.value;
+        const opt = decodeURIComponent(queryParams.value.operators);
+        const operators = (opt || "+,-").split(",").filter((item) => item.trim() != "");
         currentOperator.value = operators[Math.floor(Math.random() * operators.length)];
         num1.value = Math.floor(Math.random() * (max - min + 1)) + min;
         if (currentOperator.value === "-") {
