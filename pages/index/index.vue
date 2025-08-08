@@ -31,7 +31,7 @@ const selectedOperators = ref(['+', '-']);
 const operatorOptions = ref([
   { value: '+', label: '加法' },
   { value: '-', label: '减法' },
-  { value: '*', label: '乘法' },
+  { value: '×', label: '乘法' },
   { value: '÷', label: '除法' }
 ]);
 
