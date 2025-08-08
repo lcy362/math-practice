@@ -44,13 +44,10 @@ onMounted(() => {
 
 // 生成题目
 const generateProblem = () => {
-  const decoded = decodeURIComponent(options.params || '');
-      // 2. 解析 JSON 字符串 → 对象
-  queryParams.value = JSON.parse(decoded);
   const min = parseInt(queryParams.value.min) || 0;
   const max = parseInt(queryParams.value.max) || 20;
-  const operators = queryParams.value.operators.value;
-  // const operators = (opt || '+,-').split(',').filter((item) => item.trim() != "");
+  const opt = decodeURIComponent(queryParams.value.operators);
+  const operators = (opt || '+,-').split(',').filter((item) => item.trim() != "");
   
   // 随机选择运算符
   currentOperator.value = operators[Math.floor(Math.random() * operators.length)];
