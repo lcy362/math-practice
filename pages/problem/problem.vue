@@ -66,6 +66,10 @@ onMounted(() => {
 
 // 生成题目
 const generateProblem = (params) => {
+  // 重置答案
+  userAnswer.value = '';
+  showFeedback.value = false;
+  
   const { min, max, operators } = params;
   
   // 随机选择运算符
