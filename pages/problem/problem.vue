@@ -6,17 +6,17 @@
     
     <!-- 比较大小类型使用单选按钮 -->
     <view v-if="currentOperator === 'compare'" class="radio-group">
-      <radio-group :value="userAnswer" @change="handleRadioChange">
+      <radio-group @change="handleRadioChange">
         <label class="radio-item">
-          <radio value=">" />
+          <radio value=">" :checked="userAnswer === '>'" />
           <text>{{ num1 }} {{ getOperatorSymbol('>') }} {{ num2 }}</text>
         </label>
         <label class="radio-item">
-          <radio value="<" />
+          <radio value="<" :checked="userAnswer === '<'" />
           <text>{{ num1 }} {{ getOperatorSymbol('<') }} {{ num2 }}</text>
         </label>
         <label class="radio-item">
-          <radio value="=" />
+          <radio value="=" :checked="userAnswer === '='" />
           <text>{{ num1 }} {{ getOperatorSymbol('=') }} {{ num2 }}</text>
         </label>
       </radio-group>
