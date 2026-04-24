@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Build output
+unpackage/
+
+# IDE files
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
