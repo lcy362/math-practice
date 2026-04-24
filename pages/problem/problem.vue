@@ -4,10 +4,27 @@
       {{ num1 }} {{ currentOperator === 'compare' ? '?' : currentOperator }} {{ num2 }} = ?
     </view>
     
+    <!-- 比较大小类型使用单选按钮 -->
+    <view v-if="currentOperator === 'compare'" class="radio-group">
+      <label class="radio-item">
+        <radio value=">" v-model="userAnswer" />
+        <text>{{ num1 }} > {{ num2 }}</text>
+      </label>
+      <label class="radio-item">
+        <radio value="<" v-model="userAnswer" />
+        <text>{{ num1 }} < {{ num2 }}</text>
+      </label>
+      <label class="radio-item">
+        <radio value="=" v-model="userAnswer" />
+        <text>{{ num1 }} = {{ num2 }}</text>
+      </label>
+    </view>
+    <!-- 其他类型使用输入框 -->
     <input 
-      :type="currentOperator === 'compare' ? 'text' : 'number'" 
-      v-model="userAnswer" 
-      :placeholder="currentOperator === 'compare' ? '输入 >、< 或 =' : '输入答案'" 
+      v-else
+      type="number" 
+      v-model.number="userAnswer" 
+      placeholder="输入答案" 
       @confirm="checkAnswer"
       focus
     />
@@ -74,7 +91,10 @@ const generateProblem = (params) => {
 
 // 验证答案
 const checkAnswer = () => {
-  if (userAnswer.value === null || userAnswer.value === '') return;
+  if (userAnswer.value === null || userAnswer.value === '') {
+    uni.showToast({ title: '请选择一个答案', icon: 'none' });
+    return;
+  }
   
   let correctAnswer;
   if (currentOperator.value === 'compare') {
@@ -133,6 +153,31 @@ input {
   margin: 20px 0;
   width: 80%;
   font-size: 1.2em;
+}
+
+.radio-group {
+  margin: 20px 0;
+  width: 80%;
+  margin-left: 10%;
+}
+
+.radio-item {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.radio-item radio {
+  margin-right: 10px;
+  transform: scale(1.2);
+}
+
+.radio-item text {
+  font-size: 1.1em;
 }
 
 .submit-btn {
