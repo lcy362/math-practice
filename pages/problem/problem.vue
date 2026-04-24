@@ -1,13 +1,13 @@
 <template>
   <view class="container">
     <view class="problem">
-      {{ num1 }} {{ currentOperator }} {{ num2 }} = ?
+      {{ num1 }} {{ currentOperator === 'compare' ? '?' : currentOperator }} {{ num2 }} = ?
     </view>
     
     <input 
-      type="number" 
-      v-model.number="userAnswer" 
-      placeholder="输入答案" 
+      :type="currentOperator === 'compare' ? 'text' : 'number'" 
+      v-model="userAnswer" 
+      :placeholder="currentOperator === 'compare' ? '输入 >、< 或 =' : '输入答案'" 
       @confirm="checkAnswer"
       focus
     />
@@ -64,6 +64,9 @@ const generateProblem = (params) => {
     do {
       num2.value = Math.floor(Math.random() * (max - min + 1)) + 1;
     } while (num1.value % num2.value !== 0);
+  } else if (currentOperator.value === 'compare') {
+    // 比较运算生成两个随机数
+    num2.value = Math.floor(Math.random() * (max - min + 1)) + min;
   } else {
     num2.value = Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -74,14 +77,25 @@ const checkAnswer = () => {
   if (userAnswer.value === null || userAnswer.value === '') return;
   
   let correctAnswer;
-  switch (currentOperator.value) {
-    case '+': correctAnswer = num1.value + num2.value; break;
-    case '-': correctAnswer = num1.value - num2.value; break;
-    case '×': correctAnswer = num1.value * num2.value; break;
-    case '÷': correctAnswer = num1.value / num2.value; break;
+  if (currentOperator.value === 'compare') {
+    if (num1.value > num2.value) {
+      correctAnswer = '>';
+    } else if (num1.value < num2.value) {
+      correctAnswer = '<';
+    } else {
+      correctAnswer = '=';
+    }
+    isCorrect.value = userAnswer.value === correctAnswer;
+  } else {
+    switch (currentOperator.value) {
+      case '+': correctAnswer = num1.value + num2.value; break;
+      case '-': correctAnswer = num1.value - num2.value; break;
+      case '×': correctAnswer = num1.value * num2.value; break;
+      case '÷': correctAnswer = num1.value / num2.value; break;
+    }
+    isCorrect.value = parseFloat(userAnswer.value) === correctAnswer;
   }
   
-  isCorrect.value = parseFloat(userAnswer.value) === correctAnswer;
   showFeedback.value = true;
   
   if (isCorrect.value) {
