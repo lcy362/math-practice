@@ -8,15 +8,15 @@
     <view v-if="currentOperator === 'compare'" class="radio-group">
       <radio-group @change="handleRadioChange">
         <label class="radio-item">
-          <radio value=">" />
+          <radio value=">" :checked="userAnswer === '>'" />
           <text>{{ num1 }} > {{ num2 }}</text>
         </label>
         <label class="radio-item">
-          <radio value="<" />
+          <radio value="<" :checked="userAnswer === '<'" />
           <text>{{ num1 }} < {{ num2 }}</text>
         </label>
         <label class="radio-item">
-          <radio value="=" />
+          <radio value="=" :checked="userAnswer === '='" />
           <text>{{ num1 }} = {{ num2 }}</text>
         </label>
       </radio-group>
