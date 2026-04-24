@@ -6,7 +6,7 @@
     
     <!-- 比较大小类型使用单选按钮 -->
     <view v-if="currentOperator === 'compare'" class="radio-group">
-      <radio-group v-model="userAnswer">
+      <radio-group @change="handleRadioChange">
         <label class="radio-item">
           <radio value=">" />
           <text>{{ num1 }} > {{ num2 }}</text>
@@ -93,7 +93,10 @@ const generateProblem = (params) => {
 
 // 验证答案
 const checkAnswer = () => {
-  if (userAnswer.value === null || userAnswer.value === '') {
+  console.log('userAnswer.value:', userAnswer.value);
+  console.log('userAnswer.value type:', typeof userAnswer.value);
+  
+  if (!userAnswer.value) {
     uni.showToast({ title: '请选择一个答案', icon: 'none' });
     return;
   }
@@ -130,6 +133,13 @@ const checkAnswer = () => {
   } else {
     feedbackMessage.value = `回答错误，正确答案是：${correctAnswer}`;
   }
+};
+
+// 处理单选按钮选择
+const handleRadioChange = (e) => {
+  console.log('Radio change event:', e);
+  userAnswer.value = e.detail.value;
+  console.log('Selected value:', userAnswer.value);
 };
 
 // 返回主页
