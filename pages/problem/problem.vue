@@ -6,18 +6,20 @@
     
     <!-- 比较大小类型使用单选按钮 -->
     <view v-if="currentOperator === 'compare'" class="radio-group">
-      <label class="radio-item">
-        <radio value=">" v-model="userAnswer" />
-        <text>{{ num1 }} > {{ num2 }}</text>
-      </label>
-      <label class="radio-item">
-        <radio value="<" v-model="userAnswer" />
-        <text>{{ num1 }} < {{ num2 }}</text>
-      </label>
-      <label class="radio-item">
-        <radio value="=" v-model="userAnswer" />
-        <text>{{ num1 }} = {{ num2 }}</text>
-      </label>
+      <radio-group v-model="userAnswer">
+        <label class="radio-item">
+          <radio value=">" />
+          <text>{{ num1 }} > {{ num2 }}</text>
+        </label>
+        <label class="radio-item">
+          <radio value="<" />
+          <text>{{ num1 }} < {{ num2 }}</text>
+        </label>
+        <label class="radio-item">
+          <radio value="=" />
+          <text>{{ num1 }} = {{ num2 }}</text>
+        </label>
+      </radio-group>
     </view>
     <!-- 其他类型使用输入框 -->
     <input 
