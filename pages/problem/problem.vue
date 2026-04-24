@@ -67,7 +67,7 @@ onMounted(() => {
 // 生成题目
 const generateProblem = (params) => {
   // 重置答案
-  userAnswer.value = null;
+  userAnswer.value = '';
   showFeedback.value = false;
   
   const { min, max, operators } = params;
@@ -100,7 +100,7 @@ const checkAnswer = () => {
   console.log('userAnswer.value:', userAnswer.value);
   console.log('userAnswer.value type:', typeof userAnswer.value);
   
-  if (userAnswer.value === null || userAnswer.value === '') {
+  if (!userAnswer.value) {
     uni.showToast({ title: '请选择一个答案', icon: 'none' });
     return;
   }
@@ -131,7 +131,7 @@ const checkAnswer = () => {
     feedbackMessage.value = '回答正确！';
     setTimeout(() => {
       showFeedback.value = false;
-      userAnswer.value = null;
+      userAnswer.value = '';
       generateProblem(uni.getStorageSync('PRACTICE_PARAMS'));
     }, 1000);
   } else {
