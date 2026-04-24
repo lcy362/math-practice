@@ -1,1 +1,0 @@
-<view class="container"><view class="problem">{{a}} {{b}} {{c}} = ? </view><input type="number" placeholder="输入答案" bindconfirm="{{d}}" focus value="{{e}}" bindinput="{{f}}"/><button class="submit-btn" bindtap="{{g}}">提交</button><button class="back-btn" bindtap="{{h}}">返回主页</button><view wx:if="{{i}}" class="{{['feedback', k]}}">{{j}}</view></view>
