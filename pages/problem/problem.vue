@@ -6,18 +6,18 @@
     
     <!-- 比较大小类型使用单选按钮 -->
     <view v-if="currentOperator === 'compare'" class="radio-group">
-      <radio-group value="{{ userAnswer }}" @change="handleRadioChange">
+      <radio-group :value="userAnswer" @change="handleRadioChange">
         <label class="radio-item">
           <radio value=">" />
-          <text>{{ num1 }} &gt; {{ num2 }}</text>
+          <text>{{ num1 }} {{ getOperatorSymbol('>') }} {{ num2 }}</text>
         </label>
         <label class="radio-item">
           <radio value="<" />
-          <text>{{ num1 }} &lt; {{ num2 }}</text>
+          <text>{{ num1 }} {{ getOperatorSymbol('<') }} {{ num2 }}</text>
         </label>
         <label class="radio-item">
           <radio value="=" />
-          <text>{{ num1 }} = {{ num2 }}</text>
+          <text>{{ num1 }} {{ getOperatorSymbol('=') }} {{ num2 }}</text>
         </label>
       </radio-group>
     </view>
@@ -67,7 +67,7 @@ onMounted(() => {
 // 生成题目
 const generateProblem = (params) => {
   // 重置答案
-  userAnswer.value = '';
+  userAnswer.value = null;
   showFeedback.value = false;
   
   const { min, max, operators } = params;
@@ -100,7 +100,7 @@ const checkAnswer = () => {
   console.log('userAnswer.value:', userAnswer.value);
   console.log('userAnswer.value type:', typeof userAnswer.value);
   
-  if (!userAnswer.value) {
+  if (userAnswer.value === null || userAnswer.value === '') {
     uni.showToast({ title: '请选择一个答案', icon: 'none' });
     return;
   }
@@ -131,11 +131,21 @@ const checkAnswer = () => {
     feedbackMessage.value = '回答正确！';
     setTimeout(() => {
       showFeedback.value = false;
-      userAnswer.value = '';
+      userAnswer.value = null;
       generateProblem(uni.getStorageSync('PRACTICE_PARAMS'));
     }, 1000);
   } else {
     feedbackMessage.value = `回答错误，正确答案是：${correctAnswer}`;
+  }
+};
+
+// 获取运算符显示符号
+const getOperatorSymbol = (operator) => {
+  switch (operator) {
+    case '>': return '>';
+    case '<': return '<';
+    case '=': return '=';
+    default: return operator;
   }
 };
 
